@@ -23,10 +23,10 @@ export function DisplayArea({ messages, isLoading }: DisplayAreaProps) {
         messages.map((item, index) => {
           return (
             <div
-              className="relative z-0 w-full basis-1/2 max-h-[250px] md:max-h-[200px]  overflow-auto "
+              className=" w-full basis-1/2 max-h-[250px] md:max-h-[200px]  overflow-auto "
               key={index}
             >
-              <span className="sticky top-0 z-[1] text-neutral-100 text-lg native-blur backdrop-blur-sm  py-2 px-2 rounded">
+              <span className=" text-neutral-100 text-lg native-blur backdrop-blur-sm  py-2 px-2 rounded">
                 {item.role}
               </span>
 
