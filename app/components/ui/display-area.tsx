@@ -1,52 +1,41 @@
-import { Messages } from "@/app/types/message";
+import { Message } from "@/app/types/message";
 import { Skeleton } from "./skeleton";
-import { useEffect, useState } from "react";
+import { TypingText } from "./typing-text";
 
 interface DisplayAreaProps {
-  messages: Messages[];
+  messages: Message[];
   isLoading: boolean;
 }
 
 export function DisplayArea({ messages, isLoading }: DisplayAreaProps) {
-  console.log(messages);
-  const [fullstackMessage, setFullstackMessage] = useState("");
-  const [backendMessage, setBackendMessage] = useState("");
-
-  useEffect(() => {
-    let i = 0;
-    const interval = setInterval(() => {
-      setFullstackMessage(messages[0].message.slice(0, i + 1));
-      setBackendMessage(messages[1].message.slice(0, i + 1));
-
-      i++;
-      if (i >= messages[0].message.length && i >= messages[1].message.length) {
-        clearInterval(interval);
-      }
-    }, 10);
-    return () => clearInterval(interval);
-  }, [messages]);
-
   if (isLoading) {
     return (
-      <div className="flex flex-row gap-5 border border-border h-full w-full rounded-md bg-input/30 p-5">
-        <Skeleton className="h-full w-1/2" />
-        <Skeleton className="h-full w-1/2" />
+      <div className="flex flex-col  gap-5 border border-border h-full max-h-full w-full rounded-md bg-input/30 p-5 ">
+        <Skeleton className="h-1/2 w-full" />
+        <Skeleton className="h-1/2 w-full" />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-row gap-5 border border-border h-full w-full rounded-md bg-input/30 p-5">
-      <div className="basis-1/2 overflow-auto">
-        <p className="whitespace-pre-wrap break-words text-sm text-muted-foreground">
-          {backendMessage}
-        </p>
-      </div>
-      <div className="basis-1/2 overflow-auto">
-        <p className="whitespace-pre-wrap break-words text-sm text-muted-foreground">
-          {fullstackMessage}
-        </p>
-      </div>
+    <div className="flex flex-col gap-5 border border-border h-3/4 overflow-hidden md:h-full max-h-full w-full rounded-md bg-input/30 p-5  ">
+      {messages &&
+        messages.map((item, index) => {
+          return (
+            <div
+              className="relative z-0 w-full basis-1/2 max-h-[250px] md:max-h-[200px]  overflow-auto "
+              key={index}
+            >
+              <span className="sticky top-0 z-[1] text-neutral-100 text-lg native-blur backdrop-blur-sm  py-2 px-2 rounded">
+                {item.role}
+              </span>
+
+              <div className="whitespace-pre-wrap break-words  text-muted-foreground md:w-3/4">
+                <TypingText messageText={item.message} speed={20} />
+              </div>
+            </div>
+          );
+        })}
     </div>
   );
 }

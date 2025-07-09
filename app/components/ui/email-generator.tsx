@@ -5,12 +5,21 @@ import { DisplayArea } from "./display-area";
 import { Textarea } from "./textarea";
 import { Button } from "./button";
 import { useState } from "react";
-import { Messages } from "@/app/types/message";
+import { Message } from "@/app/types/message";
 
 export function EmailGenerator() {
   const [jobDesc, setJobDesc] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [currentContent, setCurrentContent] = useState<Messages[]>([]);
+  const [currentContent, setCurrentContent] = useState<Message[]>([]);
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (jobDesc.trim()) {
+        handleGenerate();
+      }
+    }
+  }
 
   async function handleGenerate() {
     try {
@@ -21,6 +30,7 @@ export function EmailGenerator() {
           job_description: jobDesc,
         }),
       });
+      setJobDesc("");
 
       const result = await response.json();
       setCurrentContent(result.messages);
@@ -28,19 +38,22 @@ export function EmailGenerator() {
       console.log(e);
     } finally {
       setIsLoading(false);
-      setJobDesc("");
     }
   }
 
   return (
-    <div className="flex flex-col items-center justify-end h-screen pb-4 px-5 border-border gap-2 ">
+    <div className="flex flex-col md:justify-center h-screen max-h-screen md:pb-4 md:px-5  gap-2  ">
       <DisplayArea messages={currentContent} isLoading={isLoading} />
-      <div className="flex items-center w-full h-1/4">
+      <div className="flex items-center w-full h-2/10  md:h-1/4">
         <Textarea
           className="h-full rounded-l-none rounded-bl-none border-r-0 py-4"
           placeholder="Paste job description here..."
+          value={jobDesc}
           onChange={(e) => {
             setJobDesc(e.target.value);
+          }}
+          onKeyDown={(e) => {
+            handleKeyDown(e);
           }}
         />
         <Button

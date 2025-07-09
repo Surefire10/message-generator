@@ -9,7 +9,7 @@ export function SideBar() {
 
   if (!signedIn)
     return (
-      <nav className="flex flex-col justify-end border border-border py-10  min-w-1/6 rounded-md bg-input/30">
+      <nav className="hidden md:flex flex-col justify-end border border-border py-10  min-w-1/6 rounded-md bg-input/30">
         <div className="flex flex-col items-center space-y-3 text-center">
           <Button
             variant={"outline"}

@@ -7,7 +7,7 @@ export default function DefaultLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative flex p-2 h-screen overflow-hidden">
+    <div className="relative flex p-2 h-screen  overflow-y-hidden">
       <SideBar />
       <main className="w-full">{children}</main>
       <Blur className="h-[400px] w-[400px] top-2/5 left-1/10" />

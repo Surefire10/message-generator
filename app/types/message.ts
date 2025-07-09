@@ -1,4 +1,4 @@
-export interface Messages {
+export interface Message {
   role: "";
   message: "";
 }
