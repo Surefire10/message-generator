@@ -17,11 +17,12 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_firebaseAppId,
   measurementId: process.env.NEXT_PUBLIC_firebaseMeasurementId,
 };
-
+console.log(firebaseConfig);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 const auth = getAuth(app);
+console.log(auth);
 const db = getFirestore(app);
 
 export { db, auth };

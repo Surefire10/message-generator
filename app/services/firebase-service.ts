@@ -1,27 +1,23 @@
 import { db } from "@/firebase/server";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { Message } from "../types/message";
+export async function addAIAgentResponseDocument(
+  agentResponse: Message[],
+  userId: string
+) {
+  const roleMessages = agentResponse.reduce(
+    (acc: Record<string, string>, curr) => {
+      acc[`${curr.role}Message`] = curr.message;
+      return acc;
+    },
+    {}
+  );
 
-export async function addAIAgentResponseDocument(agentResponse: {
-  fullstackMessage: string;
-  backendMessage: string;
-}) {
+  const ref = db.collection("generatedResponses");
   try {
-    console.log("agentResponse is:", agentResponse);
-    console.log(
-      "Type of fullstackMessage:",
-      typeof agentResponse.fullstackMessage
-    );
-    console.log("Type of backendMessage:", typeof agentResponse.backendMessage);
-
-    await addDoc(collection(db, "generatedResponses"), {
-      fullstackMessage: "test fullstack",
-      backendMessage: "test backend",
-      createdAt: serverTimestamp(),
-    });
-    const createdDoc = await addDoc(collection(db, "generatedResponses"), {
-      fullstackMessage: agentResponse.fullstackMessage,
-      backendMessage: agentResponse.backendMessage,
+    const createdDoc = await ref.add({
+      ...roleMessages,
       createdAt: new Date().toISOString(),
+      userId: userId,
     });
     return createdDoc.id;
   } catch (e) {

@@ -1,20 +1,37 @@
 "use client";
 
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/firebase/client";
+
+import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Loader2Icon } from "lucide-react";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleLogIn = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // You can send the data to your API here
-    console.log({ email, password });
+    try {
+      setIsLoading(true);
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      const token = await auth.currentUser?.getIdToken();
+      if (token) router.push("/");
+      setEmail("");
+      setPassword("");
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-4 space-y-4">
+    <form onSubmit={handleLogIn} className="max-w-sm mx-auto p-4 space-y-4">
       <div>
         <label
           htmlFor="email"
@@ -51,10 +68,21 @@ export default function LoginForm() {
 
       <button
         type="submit"
-        className="w-full bg-primary text-white py-2 rounded-md hover:bg-opacity-90"
+        className="w-full bg-primary text-white py-2 rounded-md hover:bg-opacity-90 hover:cursor-pointer"
       >
-        Sign In
+        {isLoading ? (
+          <Loader2Icon className="animate-spin w-full"></Loader2Icon>
+        ) : (
+          <>Log In</>
+        )}{" "}
       </button>
+      <div className="flex gap-2">
+        <p> No account yet? </p>
+        <Link href="/auth/sign-up" className="text-primary/80">
+          {" "}
+          Create an account.{" "}
+        </Link>
+      </div>
     </form>
   );
 }

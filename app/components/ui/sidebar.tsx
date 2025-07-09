@@ -3,24 +3,26 @@
 import { useState } from "react";
 import { Button } from "./button";
 import { Item } from "./item";
+import Link from "next/link";
+import { auth } from "@/firebase/client";
 
 export function SideBar() {
-  const [signedIn, setSignedIn] = useState<boolean>(false);
-
-  if (!signedIn)
+  if (!auth.currentUser?.uid)
     return (
       <nav className="hidden md:flex flex-col justify-end border border-border py-10  min-w-1/6 rounded-md bg-input/30">
         <div className="flex flex-col items-center space-y-3 text-center">
-          <Button
-            variant={"outline"}
-            className="px-4 py-2 text-white font-semibold rounded-lg shadow-md focus:outline-none w-3/4"
-          >
-            Sign In
-          </Button>
-          <p className="text-xs text-gray-500 max-w-xs">
-            sign in to view your conversations, access saved responses, and
-            more.
-          </p>
+          <Link href={"/auth/log-in"} className="mb-2">
+            <Button
+              variant={"outline"}
+              className="px-4 py-2 text-white font-semibold rounded-lg shadow-md focus:outline-none w-3/4"
+            >
+              Sign In
+            </Button>
+            <p className="text-xs text-gray-500 max-w-xs mt-2">
+              sign in to view your conversations, access saved responses, and
+              more.
+            </p>
+          </Link>
         </div>
       </nav>
     );

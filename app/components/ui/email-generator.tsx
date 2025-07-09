@@ -6,6 +6,7 @@ import { Textarea } from "./textarea";
 import { Button } from "./button";
 import { useState } from "react";
 import { Message } from "@/app/types/message";
+import { auth } from "@/firebase/client";
 
 export function EmailGenerator() {
   const [jobDesc, setJobDesc] = useState<string>("");
@@ -22,10 +23,16 @@ export function EmailGenerator() {
   }
 
   async function handleGenerate() {
+    const token = await auth.currentUser?.getIdToken();
+
     try {
       setIsLoading(true);
       const response = await fetch("/api/generate", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           job_description: jobDesc,
         }),

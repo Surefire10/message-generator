@@ -1,16 +1,19 @@
 "use client";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/client";
 import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Loader2Icon } from "lucide-react";
 export default function SignUpForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
-  const [createUserWithEmailAndPassword] =
-    useCreateUserWithEmailAndPassword(auth);
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -21,13 +24,17 @@ export default function SignUpForm() {
     }
 
     try {
-      //   const res = await createUserWithEmailAndPassword(email, password);
-      //   console.log({ res });
-      //   setEmail("");
-      //   setPassword("");
-      //   setConfirmPassword("");
+      setIsLoading(true);
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const token = await auth.currentUser?.getIdToken();
+      if (token) router.push("/");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -88,10 +95,21 @@ export default function SignUpForm() {
 
       <button
         type="submit"
-        className="w-full bg-primary text-white py-2 rounded-md hover:bg-opacity-90"
+        className="w-full bg-primary text-white py-2 rounded-md hover:bg-opacity-90 hover:cursor-pointer "
       >
-        Sign Up
+        {isLoading ? (
+          <Loader2Icon className="animate-spin w-full"></Loader2Icon>
+        ) : (
+          <>Sign Up</>
+        )}
       </button>
+      <div className="flex gap-2">
+        <p> Already have an account?</p>
+        <Link href="/auth/log-in" className="text-primary/80">
+          {" "}
+          log in now.{" "}
+        </Link>
+      </div>
     </form>
   );
 }
