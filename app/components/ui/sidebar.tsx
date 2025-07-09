@@ -1,12 +1,26 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "./button";
 import { Item } from "./item";
 import Link from "next/link";
 import { auth } from "@/firebase/client";
 
+//we grab these from firebase when we persist data
+const dummyTitles = [
+  "Senior Backend Engineer – Caching & Performance",
+  "Fullstack Developer with DevOps Expertise",
+  "Frontend State Management Engineer (Redux/Zustand)",
+  "Junior Firebase Authentication Specialist",
+  "AI Messaging App Developer (Weekend Warrior Edition)",
+  "Clean Architecture Advocate – Software Engineer",
+  "GraphQL Migration Engineer (REST to GraphQL)",
+  "TypeScript-Centric Fullstack Developer",
+  "Async JavaScript Engineer – Async/Await Specialist",
+  "Scalable Systems Designer – Fullstack Role",
+];
+
 export function SideBar() {
+  console.log(!auth.currentUser?.uid);
   if (!auth.currentUser?.uid)
     return (
       <nav className="hidden md:flex flex-col justify-end border border-border py-10  min-w-1/6 rounded-md bg-input/30">
@@ -28,15 +42,15 @@ export function SideBar() {
     );
 
   return (
-    <nav className="flex flex-col justify-between border border-border py-10 min-w-1/6 rounded-md bg-input/30">
+    <nav className="hidden md:flex flex-col justify-between border border-border py-10 min-w-1/6 rounded-md bg-input/30">
       <div className="flex justify-center px-2">
         <Button className="text-xs w-full" size={"sm"} variant={"outline"}>
           Generate new
         </Button>
       </div>
-      <div className="flex flex-col gap-2 h-80 overflow-y-scroll">
-        {new Array(10).fill(3).map((item, index) => {
-          return <Item key={index} />;
+      <div className="flex flex-col gap-2 h-7/12 overflow-y-scroll">
+        {dummyTitles.map((item, index) => {
+          return <Item key={index} title={item} />;
         })}
       </div>
     </nav>

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
+import { Blur } from "@/app/components/ui/blur";
 import { SideBar } from "../components/ui/sidebar";
-import { Blur } from "../components/ui/blur";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,11 +30,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="relative flex p-2 h-screen  overflow-y-hidden">
+          <SideBar />
           <main className="w-full">{children}</main>
           <Blur className="h-[400px] w-[400px] top-2/5 left-1/10" />
           <Blur className="h-[400px] w-[400px] top-1/5 left-7/10" />
         </div>
-        {children}
       </body>
     </html>
   );

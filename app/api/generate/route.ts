@@ -13,7 +13,6 @@ export async function POST(request: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
   const token = authHeader.split("Bearer").pop() || "";
-  console.log(token);
   const decoded = await auth.verifyIdToken(token);
   const uid = decoded.uid;
 

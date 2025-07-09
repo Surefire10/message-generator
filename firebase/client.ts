@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore/lite";
 
@@ -17,12 +17,12 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_firebaseAppId,
   measurementId: process.env.NEXT_PUBLIC_firebaseMeasurementId,
 };
-console.log(firebaseConfig);
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const app =
+  getApps().length === 0 ? initializeApp(firebaseConfig, "app") : getApps()[0]; // reuse already initialized app
+
 // const analytics = getAnalytics(app);
 const auth = getAuth(app);
-console.log(auth);
 const db = getFirestore(app);
 
 export { db, auth };
