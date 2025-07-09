@@ -25,9 +25,6 @@ export function TypingText({ messageText, speed }: TypingTextProps) {
       <p className="whitespace-pre-wrap break-words text-sm md:text-lg text-muted-foreground">
         {typingText}
       </p>
-      <p className="whitespace-pre-wrap break-words text-sm md:text-lg text-muted-foreground">
-        {typingText}
-      </p>
     </div>
   );
 }
